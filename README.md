@@ -2,6 +2,25 @@
 
 A comprehensive web application designed specifically for plumbing and electrical contractors to create professional quotations and estimates.
 
+## 🚀 Recent Updates (Latest Commit)
+
+### ✅ **Quotation Save Functionality Fixed**
+- **Resolved JavaScript Conflicts**: Fixed conflicting event handlers between `quotation-create.js` and `quotation-save-actions.js`
+- **Enhanced Form Validation**: Improved validation logic with better error handling and user feedback
+- **AJAX Form Submission**: Unified form submission system preventing traditional/AJAX conflicts
+- **Visual Feedback**: Added comprehensive validation feedback and visual indicators for required fields
+- **Real-time Monitoring**: Added MutationObserver for dynamic line items monitoring
+- **Better Error Messages**: Specific validation messages for customer, date, and line item requirements
+- **PDF Integration**: Fixed PDF download functionality in quotations management interface
+- **Debug Capabilities**: Enhanced debugging with detailed console logging
+
+### 🎯 **Save Button Requirements**
+To successfully save a quotation, ensure:
+1. **Customer Selected**: Choose from the customer dropdown
+2. **Quotation Date**: Enter or select a valid date
+3. **Line Items Added**: Add at least one product/service line item
+4. **Complete Line Items**: Each line item must have product selection and quantity
+
 ## Features
 
 ### Core Functionality
