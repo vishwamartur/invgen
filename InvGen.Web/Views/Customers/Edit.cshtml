@@ -1,0 +1,373 @@
+@model Customer
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="display-6 fw-bold text-gradient mb-2">
+                    <i class="fas fa-user-edit me-3"></i>Edit Customer
+                </h1>
+                <p class="lead text-muted mb-0">
+                    Update customer information for <strong>@Model.Name</strong>
+                    <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary") ms-2">
+                        @(Model.IsActive ? "Active" : "Inactive")
+                    </span>
+                </p>
+            </div>
+            <div class="d-none d-md-block">
+                <div class="btn-group">
+                    <a href="@Url.Action("Details", new { id = Model.Id })" class="btn btn-outline-info">
+                        <i class="fas fa-eye me-2"></i>View Details
+                    </a>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Customer Form -->
+<form asp-action="Edit" method="post" novalidate id="customerEditForm">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="CreatedDate" type="hidden" />
+    
+    <div class="row">
+        <!-- Basic Information -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-soft h-100">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user me-2"></i>Basic Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold required">
+                            <i class="fas fa-user me-1"></i>Full Name
+                        </label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter customer's full name" autocomplete="name" required>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="CompanyName" class="form-label fw-semibold">
+                            <i class="fas fa-building me-1"></i>Company Name
+                        </label>
+                        <input asp-for="CompanyName" class="form-control" placeholder="Enter company name (optional)" autocomplete="organization">
+                        <span asp-validation-for="CompanyName" class="text-danger"></span>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold required">
+                            <i class="fas fa-envelope me-1"></i>Email Address
+                        </label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="customer@example.com" autocomplete="email" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Phone" class="form-label fw-semibold">
+                                <i class="fas fa-phone me-1"></i>Phone Number
+                            </label>
+                            <input asp-for="Phone" type="tel" class="form-control" placeholder="+91 98765 43210" autocomplete="tel">
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Mobile" class="form-label fw-semibold">
+                                <i class="fas fa-mobile-alt me-1"></i>Mobile Number
+                            </label>
+                            <input asp-for="Mobile" type="tel" class="form-control" placeholder="+91 98765 43210" autocomplete="tel">
+                            <span asp-validation-for="Mobile" class="text-danger"></span>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-soft h-100">
+                <div class="card-header bg-gradient-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-map-marker-alt me-2"></i>Address Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label fw-semibold">
+                            <i class="fas fa-home me-1"></i>Street Address
+                        </label>
+                        <textarea asp-for="Address" class="form-control" rows="3" placeholder="Enter complete address" autocomplete="street-address"></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                        <div class="invalid-feedback"></div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="City" class="form-label fw-semibold">
+                                <i class="fas fa-city me-1"></i>City
+                            </label>
+                            <input asp-for="City" class="form-control" placeholder="Enter city" autocomplete="address-level2">
+                            <span asp-validation-for="City" class="text-danger"></span>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="State" class="form-label fw-semibold">
+                                <i class="fas fa-map me-1"></i>State
+                            </label>
+                            <input asp-for="State" class="form-control" placeholder="Enter state" autocomplete="address-level1">
+                            <span asp-validation-for="State" class="text-danger"></span>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PostalCode" class="form-label fw-semibold">
+                                <i class="fas fa-mail-bulk me-1"></i>Postal Code
+                            </label>
+                            <input asp-for="PostalCode" class="form-control" placeholder="123456" autocomplete="postal-code" maxlength="10">
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Country" class="form-label fw-semibold">
+                                <i class="fas fa-globe me-1"></i>Country
+                            </label>
+                            <select asp-for="Country" class="form-select">
+                                <option value="India">India</option>
+                                <option value="USA">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Business Information & Actions -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-soft">
+                <div class="card-header bg-gradient-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-briefcase me-2"></i>Business Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="GstNumber" class="form-label fw-semibold">
+                                <i class="fas fa-receipt me-1"></i>GST Number
+                            </label>
+                            <input asp-for="GstNumber" class="form-control" placeholder="22AAAAA0000A1Z5" maxlength="15" style="text-transform: uppercase;">
+                            <span asp-validation-for="GstNumber" class="text-danger"></span>
+                            <div class="invalid-feedback"></div>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Format: 2 digits + 10 characters + 1 letter + 1 digit + 1 letter + 1 character
+                            </small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IsActive" class="form-label fw-semibold">
+                                <i class="fas fa-toggle-on me-1"></i>Status
+                            </label>
+                            <div class="form-check form-switch mt-2">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox">
+                                <label class="form-check-label fw-semibold" asp-for="IsActive">
+                                    Active Customer
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Active customers appear in quotation dropdowns
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-soft">
+                <div class="card-header bg-gradient-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-save me-2"></i>Update Customer
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <i class="fas fa-save me-2"></i>
+                            <span class="btn-text">Update Customer</span>
+                            <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                        </button>
+                        <a href="@Url.Action("Details", new { id = Model.Id })" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Last updated: @Model.UpdatedDate?.ToString("MMM dd, yyyy") ?? "Never"
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Customer Activity Summary -->
+@if (Model.Quotations?.Any() == true)
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-soft">
+                <div class="card-header bg-gradient-light">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line me-2 text-primary"></i>Customer Activity Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="metric-card">
+                                <h3 class="text-primary mb-1">@Model.Quotations.Count()</h3>
+                                <p class="text-muted mb-0">Total Quotations</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="metric-card">
+                                <h3 class="text-success mb-1">@Model.Quotations.Count(q => q.Status == QuotationStatus.Approved)</h3>
+                                <p class="text-muted mb-0">Approved</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="metric-card">
+                                <h3 class="text-warning mb-1">@Model.Quotations.Count(q => q.Status == QuotationStatus.Sent)</h3>
+                                <p class="text-muted mb-0">Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="metric-card">
+                                <h3 class="text-info mb-1">₹@Model.Quotations.Sum(q => q.TotalAmount).ToString("N0")</h3>
+                                <p class="text-muted mb-0">Total Value</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Validation Summary -->
+<div asp-validation-summary="All" class="alert alert-danger d-none" id="validationSummary">
+    <h6><i class="fas fa-exclamation-triangle me-2"></i>Please correct the following errors:</h6>
+</div>
+
+<style>
+/* Customer Edit specific styles */
+.required::after {
+    content: " *";
+    color: var(--danger-color);
+    font-weight: bold;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+    background-image: none;
+}
+
+.form-control.is-valid {
+    border-color: var(--success-color);
+    background-image: none;
+}
+
+.metric-card {
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.btn-group .btn {
+    min-width: 120px;
+}
+
+#submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+@@media (max-width: 768px) {
+    .display-6 {
+        font-size: 1.5rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+    }
+}
+</style>
+
+@section Scripts {
+    <script>
+        // Reuse the customer creation JavaScript with minor modifications
+        document.addEventListener('DOMContentLoaded', function() {
+            // Change form ID for edit form
+            const form = document.getElementById('customerEditForm');
+            if (form) {
+                // Initialize the same validation and formatting as create form
+                if (typeof initializeCustomerForm === 'function') {
+                    // Modify the form ID in the global scope temporarily
+                    const originalFormId = 'customerForm';
+                    form.id = originalFormId;
+                    initializeCustomerForm();
+                    form.id = 'customerEditForm';
+                }
+            }
+        });
+    </script>
+    <script src="~/js/customer-create.js"></script>
+}

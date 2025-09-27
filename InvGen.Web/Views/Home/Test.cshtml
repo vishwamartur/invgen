@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Test Page";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-primary">Bootstrap Test Page</h1>
+            <p class="lead">This page tests if Bootstrap and CSS are loading correctly.</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Test Card 1</h5>
+                    <p class="card-text">This is a test card to verify Bootstrap styling.</p>
+                    <button class="btn btn-primary">Primary Button</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Test Card 2</h5>
+                    <p class="card-text">This card tests color variants.</p>
+                    <button class="btn btn-light">Light Button</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h5 class="card-title">Custom Stat Card</h5>
+                    <p class="card-text">This tests our custom CSS classes.</p>
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Info:</strong> If you can see this styled alert with an icon, Bootstrap and Font Awesome are working correctly.
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <button class="btn btn-primary me-2" onclick="testJavaScript()">Test JavaScript</button>
+            <button class="btn btn-secondary" data-bs-toggle="tooltip" title="This is a tooltip test">Test Tooltip</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function testJavaScript() {
+    alert('JavaScript is working!');
+    console.log('JavaScript test executed');
+}
+</script>

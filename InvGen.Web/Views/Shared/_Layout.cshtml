@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="InvGen - Professional Quotation Generator for Plumbing and Electrical Contractors" />
+    <meta name="keywords" content="quotation, invoice, plumbing, electrical, contractor, estimate" />
+    <meta name="author" content="InvGen" />
+    <title>@ViewData["Title"] - InvGen Professional</title>
+
+    <!-- Preconnect to external domains for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-file-invoice-dollar me-2"></i>
+                    <span class="fw-bold">InvGen</span>
+                    <small class="ms-2 opacity-75 d-none d-md-inline">Professional</small>
+                </a>
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-file-invoice me-2"></i>Quotations
+                            </a>
+                            <ul class="dropdown-menu shadow-lg border-0">
+                                <li><h6 class="dropdown-header"><i class="fas fa-list me-1"></i>Manage</h6></li>
+                                <li><a class="dropdown-item" asp-controller="Quotations" asp-action="Index">
+                                    <i class="fas fa-list me-2"></i>All Quotations
+                                </a></li>
+                                <li><a class="dropdown-item" asp-controller="Quotations" asp-action="Create">
+                                    <i class="fas fa-plus me-2"></i>New Quotation
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-filter me-1"></i>By Status</h6></li>
+                                <li><a class="dropdown-item" asp-controller="Quotations" asp-action="Index" asp-route-status="Draft">
+                                    <i class="fas fa-edit me-2 text-secondary"></i>Draft Quotations
+                                </a></li>
+                                <li><a class="dropdown-item" asp-controller="Quotations" asp-action="Index" asp-route-status="Sent">
+                                    <i class="fas fa-paper-plane me-2 text-primary"></i>Sent Quotations
+                                </a></li>
+                                <li><a class="dropdown-item" asp-controller="Quotations" asp-action="Index" asp-route-status="Approved">
+                                    <i class="fas fa-check me-2 text-success"></i>Approved Quotations
+                                </a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" asp-controller="Customers" asp-action="Index">
+                                <i class="fas fa-users me-2"></i>Customers
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-toolbox me-2"></i>Products
+                            </a>
+                            <ul class="dropdown-menu shadow-lg border-0">
+                                <li><h6 class="dropdown-header"><i class="fas fa-cog me-1"></i>Manage</h6></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index">
+                                    <i class="fas fa-list me-2"></i>All Products
+                                </a></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Create">
+                                    <i class="fas fa-plus me-2"></i>Add Product
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header"><i class="fas fa-industry me-1"></i>By Service</h6></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-serviceType="Plumbing">
+                                    <i class="fas fa-wrench me-2 text-info"></i>Plumbing
+                                </a></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-serviceType="Electrical">
+                                    <i class="fas fa-bolt me-2 text-warning"></i>Electrical
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Products" asp-action="Categories">
+                                    <i class="fas fa-tags me-2"></i>Categories
+                                </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chart-bar me-2"></i>Reports
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-chart-line me-2"></i>Sales Report
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-chart-pie me-2"></i>Product Analysis
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-users me-2"></i>Customer Report
+                                </a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#" title="Settings">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Alert Container for Toast Notifications -->
+    <div id="alert-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-lg" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error!</strong> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["InfoMessage"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show shadow-lg" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Info:</strong> @TempData["InfoMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["WarningMessage"] != null)
+        {
+            <div class="alert alert-warning alert-dismissible fade show shadow-lg" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <strong>Warning:</strong> @TempData["WarningMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <div class="container-fluid px-4 py-3">
+        <main role="main" class="pb-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer bg-light border-top mt-5">
+        <div class="container-fluid px-4 py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-muted">
+                        &copy; 2024 <strong>InvGen Professional</strong> - Quotation Generator for Contractors
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small class="text-muted">
+                        <i class="fas fa-code me-1"></i>Built with ASP.NET Core
+                        <span class="mx-2">|</span>
+                        <i class="fas fa-heart text-danger me-1"></i>Made for Professionals
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay d-none">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Auto-dismiss alerts after 5 seconds -->
+    <script>
+        $(document).ready(function() {
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+
+            // Add fade-in animation to main content
+            $('main').addClass('fade-in');
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

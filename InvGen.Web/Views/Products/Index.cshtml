@@ -1,0 +1,485 @@
+@model IEnumerable<InvGen.Web.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="fas fa-box me-2 text-primary"></i>Product Catalog
+            </h2>
+            <p class="text-muted mb-0">Manage your products and services</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("Create")" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Product
+            </a>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-download me-2"></i>Export
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" onclick="exportProducts('csv')">Export as CSV</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportProducts('excel')">Export as Excel</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="card shadow-soft mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control search-input" placeholder="Search products..." 
+                               data-search-type="products" id="productSearch">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        @foreach (var category in ViewBag.Categories as IEnumerable<InvGen.Web.Models.ProductCategory> ?? Enumerable.Empty<InvGen.Web.Models.ProductCategory>())
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="serviceTypeFilter">
+                        <option value="">All Types</option>
+                        <option value="1">Plumbing</option>
+                        <option value="2">Electrical</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="productTypeFilter">
+                        <option value="">All</option>
+                        <option value="product">Products</option>
+                        <option value="service">Services</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="card shadow-soft">
+        <div class="card-header bg-gradient-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>Products & Services
+                </h5>
+                <div class="d-flex align-items-center gap-3">
+                    <small class="text-muted">
+                        <span id="productCount">@Model.Count()</span> items found
+                    </small>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary active" onclick="toggleView('grid')">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleView('table')">
+                            <i class="fas fa-table"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Any())
+            {
+                <!-- Grid View (Default) -->
+                <div id="gridView" class="p-3">
+                    <div class="row g-3">
+                        @foreach (var product in Model)
+                        {
+                            <div class="col-xl-3 col-lg-4 col-md-6 product-card" 
+                                 data-category="@product.CategoryId" 
+                                 data-service-type="@((int)product.Category.ServiceType)"
+                                 data-product-type="@(product.IsService ? "service" : "product")"
+                                 data-search="@product.Name @product.Description @product.Code @product.Brand">
+                                <div class="card h-100 shadow-soft product-item">
+                                    <div class="card-header bg-gradient-light d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div class="product-icon me-2">
+                                                <i class="fas fa-@(product.IsService ? "cog" : "box") text-primary"></i>
+                                            </div>
+                                            <h6 class="mb-0">@product.Code</h6>
+                                        </div>
+                                        <span class="badge bg-@(product.Category.ServiceType == InvGen.Web.Models.ServiceType.Plumbing ? "info" : "warning")">
+                                            @product.Category.ServiceType
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-title text-primary mb-2">@product.Name</h6>
+                                        
+                                        @if (!string.IsNullOrEmpty(product.Description))
+                                        {
+                                            <p class="card-text text-muted small mb-2">@product.Description</p>
+                                        }
+                                        
+                                        <div class="mb-2">
+                                            <small class="text-muted">Category:</small>
+                                            <div class="fw-medium">@product.Category.Name</div>
+                                        </div>
+                                        
+                                        @if (!string.IsNullOrEmpty(product.Brand))
+                                        {
+                                            <div class="mb-2">
+                                                <small class="text-muted">Brand:</small>
+                                                <div class="fw-medium">@product.Brand</div>
+                                            </div>
+                                        }
+                                        
+                                        <div class="mb-2">
+                                            <small class="text-muted">Unit:</small>
+                                            <div class="fw-medium">@product.Unit</div>
+                                        </div>
+                                        
+                                        <div class="price-section">
+                                            <div class="fw-bold text-success fs-5">₹@product.UnitPrice.ToString("N2")</div>
+                                            <small class="text-muted">per @product.Unit</small>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+                                        <div class="btn-group w-100" role="group">
+                                            <a href="@Url.Action("Details", new { id = product.Id })" 
+                                               class="btn btn-outline-primary btn-sm"
+                                               data-bs-toggle="tooltip" 
+                                               title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="@Url.Action("Edit", new { id = product.Id })" 
+                                               class="btn btn-outline-secondary btn-sm"
+                                               data-bs-toggle="tooltip" 
+                                               title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn btn-outline-success btn-sm" 
+                                                    onclick="addToQuotation(@product.Id)"
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Add to Quotation">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            <button type="button" 
+                                                    class="btn btn-outline-danger btn-sm" 
+                                                    onclick="deleteProduct(@product.Id)"
+                                                    data-bs-toggle="tooltip" 
+                                                    title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Table View (Hidden by default) -->
+                <div id="tableView" class="d-none">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="productsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="sortable" data-sort="code">
+                                        <i class="fas fa-sort me-1"></i>Code
+                                    </th>
+                                    <th class="sortable" data-sort="name">
+                                        <i class="fas fa-sort me-1"></i>Name
+                                    </th>
+                                    <th class="sortable" data-sort="category">
+                                        <i class="fas fa-sort me-1"></i>Category
+                                    </th>
+                                    <th class="sortable" data-sort="brand">
+                                        <i class="fas fa-sort me-1"></i>Brand
+                                    </th>
+                                    <th class="sortable" data-sort="price">
+                                        <i class="fas fa-sort me-1"></i>Price
+                                    </th>
+                                    <th class="sortable" data-sort="unit">
+                                        <i class="fas fa-sort me-1"></i>Unit
+                                    </th>
+                                    <th>Type</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var product in Model)
+                                {
+                                    <tr class="product-row" 
+                                        data-category="@product.CategoryId" 
+                                        data-service-type="@((int)product.Category.ServiceType)"
+                                        data-product-type="@(product.IsService ? "service" : "product")"
+                                        data-search="@product.Name @product.Description @product.Code @product.Brand">
+                                        <td>
+                                            <div class="fw-medium text-primary">@product.Code</div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-medium">@product.Name</div>
+                                            @if (!string.IsNullOrEmpty(product.Description))
+                                            {
+                                                <small class="text-muted d-block">@product.Description</small>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div>@product.Category.Name</div>
+                                            <span class="badge bg-@(product.Category.ServiceType == InvGen.Web.Models.ServiceType.Plumbing ? "info" : "warning") badge-sm">
+                                                @product.Category.ServiceType
+                                            </span>
+                                        </td>
+                                        <td>@product.Brand</td>
+                                        <td>
+                                            <div class="fw-bold text-success">₹@product.UnitPrice.ToString("N2")</div>
+                                        </td>
+                                        <td>@product.Unit</td>
+                                        <td>
+                                            <span class="badge bg-@(product.IsService ? "secondary" : "primary") badge-sm">
+                                                @(product.IsService ? "Service" : "Product")
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="@Url.Action("Details", new { id = product.Id })" 
+                                                   class="btn btn-outline-primary"
+                                                   data-bs-toggle="tooltip" 
+                                                   title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="@Url.Action("Edit", new { id = product.Id })" 
+                                                   class="btn btn-outline-secondary"
+                                                   data-bs-toggle="tooltip" 
+                                                   title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" 
+                                                        class="btn btn-outline-success" 
+                                                        onclick="addToQuotation(@product.Id)"
+                                                        data-bs-toggle="tooltip" 
+                                                        title="Add to Quotation">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <button type="button" 
+                                                        class="btn btn-outline-danger" 
+                                                        onclick="deleteProduct(@product.Id)"
+                                                        data-bs-toggle="tooltip" 
+                                                        title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-box fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No products found</h5>
+                    <p class="text-muted mb-3">Start by adding your first product or service</p>
+                    <a href="@Url.Action("Create")" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Product
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced products functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initializeProductsPage();
+});
+
+function initializeProductsPage() {
+    // Initialize search functionality
+    const searchInput = document.getElementById('productSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const serviceTypeFilter = document.getElementById('serviceTypeFilter');
+    const productTypeFilter = document.getElementById('productTypeFilter');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', filterProducts);
+    }
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterProducts);
+    }
+    if (serviceTypeFilter) {
+        serviceTypeFilter.addEventListener('change', filterProducts);
+    }
+    if (productTypeFilter) {
+        productTypeFilter.addEventListener('change', filterProducts);
+    }
+    
+    // Initialize sorting
+    initializeSorting();
+}
+
+function filterProducts() {
+    const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const serviceTypeFilter = document.getElementById('serviceTypeFilter').value;
+    const productTypeFilter = document.getElementById('productTypeFilter').value;
+    
+    const items = document.querySelectorAll('.product-card, .product-row');
+    let visibleCount = 0;
+    
+    items.forEach(item => {
+        const searchText = item.getAttribute('data-search').toLowerCase();
+        const category = item.getAttribute('data-category');
+        const serviceType = item.getAttribute('data-service-type');
+        const productType = item.getAttribute('data-product-type');
+        
+        const matchesSearch = !searchTerm || searchText.includes(searchTerm);
+        const matchesCategory = !categoryFilter || category === categoryFilter;
+        const matchesServiceType = !serviceTypeFilter || serviceType === serviceTypeFilter;
+        const matchesProductType = !productTypeFilter || productType === productTypeFilter;
+        
+        if (matchesSearch && matchesCategory && matchesServiceType && matchesProductType) {
+            item.style.display = '';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
+        }
+    });
+    
+    // Update count
+    const countElement = document.getElementById('productCount');
+    if (countElement) {
+        countElement.textContent = visibleCount;
+    }
+}
+
+function clearFilters() {
+    document.getElementById('productSearch').value = '';
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('serviceTypeFilter').value = '';
+    document.getElementById('productTypeFilter').value = '';
+    filterProducts();
+}
+
+function toggleView(viewType) {
+    const tableView = document.getElementById('tableView');
+    const gridView = document.getElementById('gridView');
+    const buttons = document.querySelectorAll('.btn-group button');
+    
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    if (viewType === 'table') {
+        tableView.classList.remove('d-none');
+        gridView.classList.add('d-none');
+        buttons[1].classList.add('active');
+    } else {
+        tableView.classList.add('d-none');
+        gridView.classList.remove('d-none');
+        buttons[0].classList.add('active');
+    }
+}
+
+function initializeSorting() {
+    const sortableHeaders = document.querySelectorAll('.sortable');
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const sortBy = this.getAttribute('data-sort');
+            sortTable(sortBy);
+        });
+    });
+}
+
+function sortTable(sortBy) {
+    const table = document.getElementById('productsTable');
+    if (!table) return;
+    
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    
+    rows.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch (sortBy) {
+            case 'code':
+                aVal = a.cells[0].textContent.trim();
+                bVal = b.cells[0].textContent.trim();
+                break;
+            case 'name':
+                aVal = a.cells[1].textContent.trim();
+                bVal = b.cells[1].textContent.trim();
+                break;
+            case 'category':
+                aVal = a.cells[2].textContent.trim();
+                bVal = b.cells[2].textContent.trim();
+                break;
+            case 'brand':
+                aVal = a.cells[3].textContent.trim();
+                bVal = b.cells[3].textContent.trim();
+                break;
+            case 'price':
+                aVal = parseFloat(a.cells[4].textContent.replace(/[₹,]/g, ''));
+                bVal = parseFloat(b.cells[4].textContent.replace(/[₹,]/g, ''));
+                break;
+            case 'unit':
+                aVal = a.cells[5].textContent.trim();
+                bVal = b.cells[5].textContent.trim();
+                break;
+            default:
+                return 0;
+        }
+        
+        if (aVal < bVal) return -1;
+        if (aVal > bVal) return 1;
+        return 0;
+    });
+    
+    // Clear and re-append sorted rows
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+function addToQuotation(productId) {
+    // This would typically open a modal or redirect to quotation creation
+    InvGen.showNotification('Feature coming soon: Add to quotation', 'info');
+}
+
+function deleteProduct(id) {
+    if (InvGen.confirmDelete('Are you sure you want to delete this product?')) {
+        fetch(`/Products/Delete/${id}`, {
+            method: 'POST',
+            headers: {
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                InvGen.showNotification('Error deleting product', 'danger');
+            }
+        })
+        .catch(error => {
+            InvGen.showNotification('Error deleting product', 'danger');
+        });
+    }
+}
+
+function exportProducts(format) {
+    InvGen.showNotification(`Exporting products as ${format.toUpperCase()}...`, 'info');
+    // Implement export functionality
+}
+</script>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Invgen (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Invgen (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
